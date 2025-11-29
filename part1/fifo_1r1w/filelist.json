@@ -1,0 +1,7 @@
+ {
+    "top": "fifo_1r1w",
+    "files":
+     ["part1/fifo_1r1w/fifo_1r1w.sv",
+      "part1/fifo_1r1w/ram_1r1w_sync.sv"
+    ]
+}

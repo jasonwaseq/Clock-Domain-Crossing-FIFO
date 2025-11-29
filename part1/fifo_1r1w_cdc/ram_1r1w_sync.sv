@@ -1,0 +1,49 @@
+`ifndef BINPATH
+ `define BINPATH ""
+`endif
+module ram_1r1w_sync
+  #(parameter [31:0] width_p = 8
+  ,parameter [31:0] depth_p = 512
+  /* verilator lint_off UNUSEDPARAM */
+  ,parameter string filename_p = "memory_init_file.bin")
+  /* verilator lint_on UNUSEDPARAM */
+  (input [0:0] wclk_i
+  ,input [0:0] rclk_i
+  ,input [0:0] creset_i
+  ,input [0:0] preset_i
+  ,input [0:0] wr_valid_i
+  ,input [width_p-1:0] wr_data_i
+  ,input [$clog2(depth_p) - 1 : 0] wr_addr_i
+
+  ,input [0:0] rd_valid_i
+  ,input [$clog2(depth_p) - 1 : 0] rd_addr_i
+  ,output [width_p-1:0] rd_data_o);
+
+  logic [width_p-1:0] ram [depth_p-1:0];
+  
+  logic [width_p-1:0] rd_data_l;
+
+  always_ff @(posedge wclk_i) begin
+    if (~creset_i && wr_valid_i) 
+      ram[wr_addr_i] <= wr_data_i;
+  end
+
+  always_ff @(posedge rclk_i) begin
+    if (~preset_i && rd_valid_i)
+      rd_data_l <= ram[rd_addr_i];
+  end
+
+  assign rd_data_o = rd_data_l;
+
+   initial begin
+      // Display depth and width (You will need to match these in your init file)
+      $display("%m: depth_p is %d, width_p is %d", depth_p, width_p);
+      // wire [bar:0] foo [baz:0];
+      // In order to get the memory contents in iverilog you need to run this for loop during initialization:
+      for (int i = 0; i < depth_p; i++) begin
+        $dumpvars(0, ram[i]);
+        ;
+      end
+   end
+
+endmodule
