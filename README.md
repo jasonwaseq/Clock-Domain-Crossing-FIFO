@@ -1,3 +1,3 @@
-# Lab Assignment 7
+# Clock Domain Crossing FIFO
 
-Click `Code` > `Codespaces` > `Create codespace on main` to start coding!
+I implemented a fully parameterized cross-clock FIFO capable of safely transferring data between asynchronous clock domains. I first designed a synchronous 1R1W FIFO using behavioral SystemVerilog and my existing ram_1r1w_sync module, adapting my previous FIFO design to use the ghost-pointer method instead of a length counter to ensure CDC compatibility. I then developed the CDC FIFO by integrating gray-code read/write pointers, pointer synchronizers, and counter modules reused from earlier labs. After assembling the system, I verified correctness by driving audio samples across the 25 MHz and 12 MHz clock domains, confirming that data integrity was preserved throughout the transfer. This work strengthened my understanding of safe multi-clock digital design and modular RTL reuse.
